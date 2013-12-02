@@ -1,8 +1,1 @@
-# API
-
-## game
-
-## inventory
-
-## monsters
-
+http://openetherpad.org/p/game-api
