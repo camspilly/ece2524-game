@@ -1,0 +1,14 @@
+Game to help people learn *nix
+
+contributors: jpo, camspill, cdorick, yousbj
+url: https://github.com/jpouellet/ece2524-game
+
+This is a game designed to help you learn how to use the linux command line.
+
+Yousef: add instructions for how to invoke your front end.
+
+Requirements:
+ - Bash (known to work as far back as 3.2)
+ - GNU coreutils (or equivalent)
+ - Perl
+ - probably other things (let me know when it breaks, and send me any errors you see)
