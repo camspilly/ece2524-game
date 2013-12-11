@@ -1,0 +1,1 @@
+http://etherpad.wikimedia.org/p/ece2524-game-api
