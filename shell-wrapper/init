@@ -1,0 +1,37 @@
+# set up the environment for the game
+
+PS1="$ "
+
+cd "$GAME_LEVEL_DIR/sandbox"
+
+game_hook() {
+	[ "$BASH_COMMAND" = "$PROMPT_COMMAND" -o -n "$COMP_LINE" ] && return
+	cmd="$(history 1 | sed 's/^[ ]*[0-9]*[ ]*//')";
+
+	if [ "$cmd" = "help" ]; then
+		less "$GAME_LEVEL_DIR/HELP"
+		exit 16
+	fi
+
+	[ "$cmd" = "quit" ] && exit 33
+	[ "$cmd" = "exit" ] && exit 33
+	[ "$cmd" = "leave" ] && exit 33
+
+	used=($("$GAME_SHELL_WRAPPER_DIR/get_commands.sh" "$cmd"))
+	allowed="$(cat "$GAME_LEVEL_DIR/COMMANDS")"
+	failed=false
+	for this in $used; do
+		if [ -z "$(echo "$allowed" | grep -F "$this")" ]; then
+			failed=true
+			printf "\n\x1b[31m$this\x1b[35m is not allowed!\x1b[0m\n\n"
+			exit 16
+		fi
+	done
+	$failed && return
+	eval "$cmd"
+	out="$("$GAME_LEVEL_DIR/validate.sh")" && exit 32
+	printf "\n\x1b[35m%s\x1b[0m\n\n" "$out"
+
+	exit 16
+}
+trap game_hook DEBUG
