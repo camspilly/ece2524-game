@@ -1,50 +1,14 @@
-Console-Based RPG
+Game to help people learn *nix
 
-contributors: jpo, Cameron Spiller, Christopher Dorick, Youssef Ben Jamia
-url:
+contributors: jpo, camspill, cdorick, yousbj
+url: https://github.com/jpouellet/ece2524-game
 
-[GUYS! CHANGE YOUR NAMES TO YOUR USERNAMES BEFORE SUBMITTING]
+This is a game designed to help you learn how to use the linux command line.
 
-We plan to make a console-based role playing game.
+Yousef: add instructions for how to invoke your front end.
 
-I believe this lends itself well to a highly-modular design. We have identified
-multiple components which can be developed in relative isolation, and as long
-as we have a clearly-defined interface of how those components shall interact
-then combining them into a single monolithic program should be a non-issue.
-
-The individual components we have identified are:
- - a dynamic map generator
- 	Cameron
- - monsters with some amount of AI
-	Youssef
- - an inventory system
-	Christopher
- - a representation (way of storing and interacting with) the game-world
-	needs to be agreed upon as a group
- - a graphics/user-input system
- 	Jean-Philippe
-and a minimal amount of code to tie it all together.
-
-[Map generator]
-We would like the maps to be algorithmically generated such that the game does
-not become repetitive and boring once players have memorized some fixed set of
-static maps.
-
-[Monsters]
-Games would be boring if players had nothing to interact with.
-
-[Inventory system]
-A way of picking up, dropping, using items.
-(and possibly other stuff, crafting anyone?)
-
-[Graphics system]
-I plan to make use ncurses to provide an interactive terminal-based interface.
-curses (depending on your termcap) has support for the mouse, but it is hardly
-ever used, so I think it might be neat to add clicking functionality :D
-
-[Application of UNIX philosophy]
- - Each component of the game does one thing and does it well. (modularity)
- - Each component will be designed in isolation and will not have side-effects
-   to other parts of the game except as defined by the interface (orthogonality)
- - The game is console based (text), and the internal representation of the
-   world can be text based. (text)
+Requirements:
+ - Bash (known to work as far back as 3.2)
+ - GNU coreutils (or equivalent)
+ - Perl
+ - probably other things (let me know when it breaks, and send me any errors you see)
