@@ -25,11 +25,17 @@ fi
 
 "$GAME_SHELL_WRAPPER_DIR/display_header.sh" "$GAME_LEVEL_DIR"
 
+rm -rf "$GAME_LEVEL_DIR/scratch"
+cp -r "$GAME_LEVEL_DIR/clean" "$GAME_LEVEL_DIR/scratch"
+
 while true; do
 	bash --noprofile --rcfile "$GAME_SHELL_WRAPPER_DIR/init" -i
 	result=$?
 	if [ $result -eq 16 ]; then # requested help reset
-		continue;
+		continue
+	fi
+	if [ $result -eq 0 ]; then # ^D exits with 0, challenge success is 32
+		exit 33
 	fi
 	exit $result
 done

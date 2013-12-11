@@ -4,6 +4,9 @@ Figure out what target you need to use to make a present,
 and what variable you need to set to select a type of present,
 then invoke make(1) such that it makes a present.
 
+If you messed up making a present, you might need to `make clean`
+before trying again.
+
 With just a little bit of reading documentation, everyone can
 become a great elf!
 

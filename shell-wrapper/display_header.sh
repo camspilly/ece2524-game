@@ -32,5 +32,5 @@ echo -n "Allowed commands: "
 tr '\n' ' ' < COMMANDS | sed 's/ *$//; s/ /, /g'
 
 echo -n "Recommended man pages: "
-$sed -E 's/^(\w*):(\w*)$/\2(\1)/' < MANPAGES | tr '\n' ' ' | sed 's/ *$//; s/ /, /g'
+$sed -E 's/^(\w*):(.*)$/\2(\1)/' < MANPAGES | tr '\n' ' ' | sed 's/ *$//; s/ /, /g'
 echo ""

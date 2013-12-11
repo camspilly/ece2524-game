@@ -2,7 +2,9 @@
 
 PS1="$ "
 
-cd "$GAME_LEVEL_DIR/sandbox"
+HISTFILE="$GAME_LEVEL_DIR/history"
+
+cd "$GAME_LEVEL_DIR/scratch"
 
 game_hook() {
 	[ "$BASH_COMMAND" = "$PROMPT_COMMAND" -o -n "$COMP_LINE" ] && return
