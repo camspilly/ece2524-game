@@ -5,7 +5,11 @@ url: https://github.com/jpouellet/ece2524-game
 
 This is a game designed to help you learn how to use the linux command line.
 
-Yousef: add instructions for how to invoke your front end.
+Yousef: Add instructions for how to invoke your front end!!!
+
+In the mean time, to test only the shell-wrapper subsystem, type:
+
+    GAME_LEVEL_DIR=levels/santa ./shell-wrapper/run.sh
 
 Requirements:
  - Bash (known to work as far back as 3.2)
