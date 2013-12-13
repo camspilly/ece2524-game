@@ -33,7 +33,7 @@ while ! $worked; do
 	| grep -F "command not found" \
 	| $sed -E 's/^.*: (\w+): command not found$/\1/g'); do
 		used+=("$bin")
-		ln -s /usr/bin/true "$tmp_path/$bin"
+		ln -sf /usr/bin/true "$tmp_path/$bin"
 		worked=false
 	done
 done
