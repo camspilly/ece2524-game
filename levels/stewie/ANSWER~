@@ -1,0 +1,1 @@
+cat text1.txt text2.txt text3.txt | sort >sortedtext.txt

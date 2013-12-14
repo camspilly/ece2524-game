@@ -1,0 +1,38 @@
+Leonard: Hey there! You must be
+         the new Linux intern the
+         university hired to help
+         us over winter break!
+Sheldon Walks In
+Sheldon: Oh bother Leonard
+Leonard: What is it now Sheldon?
+Sheldon: I'm so frustrated. You
+         know how I am doing work
+         with cartesian products
+         for my research on the 
+         Higgs-Boson Particle?
+Leonard: Of course, thats all you've
+         talked about the last month.
+Sheldon: Well I have to manually enter
+         all the cartesian products
+         of 3 sets where each contains
+         the numbers 1-9. I have to 
+         put it into a text file. 
+Leonard: Whats that, intern? You can a 
+         one line command in linux to
+         do that for him?
+Sheldon: Well that preposterous. If it
+         was that easy I would have 
+         already done it.
+Leonard: Whats that intern? You 
+         bet your whole internship
+         on the fact that you can 
+         do this? Okay, well go for
+         it! A little hint though,
+         he does not need each
+         number separated by any-
+         thing. You can just make
+         something like 123 where
+         1, 2, and 3 are all dif-
+         erent numbers. Also,
+         simply make the output
+         titled "output"
