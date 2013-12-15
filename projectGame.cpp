@@ -53,8 +53,7 @@ int main()
     {
 
     cin >> userInput;
-    updateMap(currPos);
-    printMap();
+    
     switch(userInput)
 
     {
@@ -68,6 +67,8 @@ int main()
     case'w': moveUp(currPos);
 
     }
+    updateMap(currPos);
+    printMap();
 
     }
      return 0;
@@ -87,7 +88,7 @@ void loadMap(string fileName)
 
   ifstream inputFile(fileName.c_str());
     int i,j;
-    for (i=0;i<5;i++)
+    for (i=0;i<50;i++)
       {
 	for (j=0; j<50; j++)
 	  {
@@ -129,6 +130,7 @@ void bufferOff()
 void moveLeft(position_e currPos)
 {
   currPos.x_cor=(map[currPos.x_cor -1][currPos.y_cor]=='X')? currPos.x_cor: currPos.x_cor--;
+  
 }
 void moveRight(position_e currPos)
 {
