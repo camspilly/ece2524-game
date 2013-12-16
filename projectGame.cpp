@@ -165,12 +165,9 @@ void getLevels(map<char, Wizzard> mapOfLevels)
 
   }
 
-
-
-
 }
 
-void loadMap(string fileName)
+void loadMap(string fileName, position_e currPos)
 {
 
   ifstream inputFile(fileName.c_str());
@@ -180,6 +177,11 @@ void loadMap(string fileName)
 	for (j=0; j<50; j++)
 	  {
              inputFile >> gameMap[i][j];
+	     if (gameMap[i][j]=='@') 
+	     {
+	       currPos.x_cor= i;
+	       currPos.y_cor= j;
+	     {
 
 	  }
 
@@ -199,6 +201,7 @@ int i,j;
     for(j=0;j<50;j++)
     {
      cout<<gameMap[i][j];
+     
     }
   }
 }
