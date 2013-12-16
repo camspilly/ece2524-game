@@ -103,7 +103,7 @@ void proceedInput(char userInput,  position_e& currPos)
 {
     int requestedX= currPos.x_cor;
     int requestedY= currPos.y_cor;
-    gameMap[currPos.x_cor][currPos.y_cor]=' ';
+    gameMap[currPos.y_cor][currPos.x_cor]=' ';
 
     switch (userInput) {
     case 'w':
@@ -120,7 +120,7 @@ void proceedInput(char userInput,  position_e& currPos)
         break;
     }
 
-    char  onTheMap= gameMap[requestedX][requestedY];
+    char  onTheMap= gameMap[requestedY][requestedX];
 
     if ( mapOfLevels.count(onTheMap)==0)
     {
@@ -184,10 +184,10 @@ void loadMap(string fileName, position_e& currPos)
     int i,j;
     for (i=0; i<50; i++) {
         for (j=0; j<50; j++) {
-            inputFile >> gameMap[i][j];
-            if (gameMap[i][j]=='@') {
-                currPos.x_cor= i;
-                currPos.y_cor= j;
+            inputFile >> gameMap[j][i];
+            if (gameMap[j][i]=='@') {
+                currPos.x_cor= j;
+                currPos.y_cor= i;
             }
         }
     }
@@ -195,7 +195,7 @@ void loadMap(string fileName, position_e& currPos)
 
 void updateMap(position_e& currPos)
 {
-    gameMap[currPos.x_cor][currPos.y_cor]= '@';
+    gameMap[currPos.y_cor][currPos.x_cor]= '@';
 }
 
 void printMap()
@@ -205,7 +205,7 @@ void printMap()
     {
         for(j=0; j<50; j++)
         {
-            cout<<gameMap[i][j];
+            cout<<gameMap[j][i];
 
         }
     }
