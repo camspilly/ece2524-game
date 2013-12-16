@@ -43,8 +43,8 @@ void proceedInput(char userInput, position_e currPos);
 
 int main(int argc, char *argv[])
 {
-    
- 
+
+
    //Building the path prefix
    // we stdup it twice because some implementations of dirname
    // return a pointer to internal static memory, and others
@@ -54,14 +54,14 @@ int main(int argc, char *argv[])
     prefix = string (firstCopyDir);
     free(firstCopy);
     levelScript = prefix + "/shell-wrapper/run.sh";
-  
+
     position_e currPos;
     currPos.x_cor= 49;
     currPos.y_cor= 49;
 
     //Desactivate stdin buffer
     bufferOff();
-  
+
     //Loading map from file
     loadMap("main.map");
     updateMap(currPos);
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
     //Loading the levels into the map structure
     getLevels(mapOfLevels);
 
-    gameOver= false;    
+    gameOver= false;
 
     char userInput;
 
@@ -89,8 +89,8 @@ int main(int argc, char *argv[])
      return 0;
 }
 
-    
-   
+
+
 
 
 
@@ -103,7 +103,7 @@ void proceedInput(char userInput,  position_e currPos)
   int requestedY= currPos.y_cor;
   requestedX= (userInput == 'a')?requestedX--:
     (userInput == 'd')? requestedX++ :requestedX;
-  
+
   requestedY= (userInput == 's')?requestedY--:
     (userInput == 'w')?requestedY++:requestedY;
 
@@ -111,7 +111,7 @@ void proceedInput(char userInput,  position_e currPos)
 
   if ( mapOfLevels.count(onTheMap)==0)
     {
-      if(onTheMap != 'X') 
+      if(onTheMap != 'X')
 	{
 	  currPos.x_cor= requestedX;
 	  currPos.y_cor= requestedY;
@@ -129,13 +129,13 @@ void proceedInput(char userInput,  position_e currPos)
 	  currPos.x_cor= requestedX;
 	  currPos.y_cor= requestedY;
 	} else if (ret == 33) {
-	  
+
 	} else {
 	  // some error
 	}
       }
     }
-  
+
 }
 
 void getLevels(map<char, Wizzard> mapOfLevels)
@@ -144,7 +144,7 @@ void getLevels(map<char, Wizzard> mapOfLevels)
   DIR *subdir;
   struct dirent *ent;
   struct dirent *subent;
-  if ((dir = opendir("")) != NULL)
+  if ((dir = opendir((prefix+"/levels").c_str())) != NULL)
   {
     while ((ent= readdir (dir)) != NULL)
       {
@@ -153,8 +153,8 @@ void getLevels(map<char, Wizzard> mapOfLevels)
 
 	myWizzard.name= ent->d_name;
 	myWizzard.dead= false;
- 
-	subdir = opendir("");
+
+	subdir = opendir((prefix+"/levels/"+myWizzard.name).c_str());
 	subent= readdir(subdir);
 
 	ifstream levelStream(subent->d_name);
@@ -180,10 +180,10 @@ void loadMap(string fileName)
 	for (j=0; j<50; j++)
 	  {
              inputFile >> gameMap[i][j];
-	    
+
 	  }
 
-      }   
+      }
 }
 
 void updateMap(position_e currPos)
@@ -204,7 +204,7 @@ int i,j;
 }
 
 void bufferOff()
-{  
+{
   //Desactivating standard input buffer
   struct termios t;
   tcgetattr(0, &t);
