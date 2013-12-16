@@ -149,6 +149,11 @@ void getLevels(map<char, Wizzard> mapOfLevels)
 	}
 
 	while ((ent = readdir (dir)) != NULL) {
+		if (strcmp(ent->d_name, ".") == 0 ||
+		    strcmp(ent->d_name, "..") == 0 ||
+		    ent->d_type != DT_DIR)
+			continue;
+
 		Wizzard myWizzard;
 		char wizzarS; //Symbol
 
