@@ -34,12 +34,9 @@ map <char, Wizzard> mapOfLevels;
 
 void loadMap(string fileName, position_e& currPos);
 void bufferOff();
-void updateMap(position_e& currPos);
-void printMap();
+void printMap(position_e &currPos);
 void getLevels(map<char, Wizzard> mapOfLevels);
 void proceedInput(char userInput, position_e& currPos);
-
-
 
 int main(int argc, char *argv[])
 {
@@ -64,8 +61,7 @@ int main(int argc, char *argv[])
 
     //Loading map from file
     loadMap("main.map", currPos);
-    updateMap(currPos);
-    printMap();
+    printMap(currPos);
 
     //Loading the levels into the map structure
     getLevels(mapOfLevels);
@@ -82,10 +78,7 @@ int main(int argc, char *argv[])
 
         cin >> userInput;
         proceedInput(userInput,currPos);
-        updateMap(currPos);
-	cout<<"\x1b[2J"; //Clear the screen
-	cout<<"\x1b[;H"; // move cursor to top-left
-	printMap();
+	printMap(currPos);
 
     }
     return 0;
@@ -101,33 +94,32 @@ int main(int argc, char *argv[])
 /////////////////////////////////////////////
 void proceedInput(char userInput,  position_e& currPos)
 {
-    int requestedX= currPos.x_cor;
-    int requestedY= currPos.y_cor;
-    gameMap[currPos.y_cor][currPos.x_cor]=' ';
+    int requestedX = currPos.x_cor;
+    int requestedY = currPos.y_cor;
 
     switch (userInput) {
     case 'w':
-        requestedY++;
+        requestedY--;
         break;
     case 'a':
         requestedX--;
         break;
     case 's':
-        requestedY--;
+        requestedY++;
         break;
     case 'd':
         requestedX++;
         break;
     }
 
-    char  onTheMap= gameMap[requestedY][requestedX];
+    char onTheMap = gameMap[requestedX][requestedY];
 
     if ( mapOfLevels.count(onTheMap)==0)
     {
         if(onTheMap != 'X')
         {
-            currPos.x_cor= requestedX;
-            currPos.y_cor= requestedY;
+            currPos.x_cor = requestedX;
+            currPos.y_cor = requestedY;
         }
     }
     else
@@ -184,30 +176,35 @@ void loadMap(string fileName, position_e& currPos)
     int i,j;
     for (i=0; i<50; i++) {
         for (j=0; j<50; j++) {
-            inputFile >> gameMap[j][i];
-            if (gameMap[j][i]=='@') {
+            char cell;
+            inputFile >> cell;
+            if (cell == '@') {
                 currPos.x_cor= j;
                 currPos.y_cor= i;
-            }
+                gameMap[j][i] = '-';
+            } else
+                gameMap[j][i] = cell;
         }
     }
 }
 
-void updateMap(position_e& currPos)
-{
-    gameMap[currPos.y_cor][currPos.x_cor]= '@';
-}
-
-void printMap()
+void printMap(position_e &currPos)
 {
     int i,j;
+
+    cout<<"\x1b[2J"; //Clear the screen
+    cout<<"\x1b[;H"; // move cursor to top-left
+
     for(i=0; i<50; i++)
     {
         for(j=0; j<50; j++)
         {
-            cout<<gameMap[j][i];
-
+            if (i == currPos.y_cor && j == currPos.x_cor)
+                cout << "@";
+            else
+                cout << gameMap[j][i];
         }
+        cout << endl;
     }
 }
 
