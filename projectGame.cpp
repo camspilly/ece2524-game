@@ -158,7 +158,7 @@ void getLevels(map<char, Wizzard> mapOfLevels)
 	subent= readdir(subdir);
 
 	ifstream levelStream(subent->d_name);
-	levelStream >> wizzarS;
+	wizzarS= levelStream.get();
 
 	mapOfLevels.insert (pair <char, Wizzard> (wizzarS,myWizzard));
       }
