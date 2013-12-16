@@ -35,6 +35,7 @@ void bufferOff();
 void printMap(position_e &currPos);
 void getLevels(map<char, Wizzard>& mapOfLevels);
 void proceedInput(char userInput, position_e& currPos);
+void resetTerminal();
 
 int main(int argc, char *argv[])
 {
@@ -120,7 +121,8 @@ void proceedInput(char userInput,  position_e& currPos)
 	} else {
 		if(!(mapOfLevels.at(onTheMap).dead)) {
 			// build the full path of the shell wrapper
-			setenv("GAME_LEVEL_DIR", (prefix + "/" + mapOfLevels.at(onTheMap).name).c_str(), 1);
+			setenv("GAME_LEVEL_DIR", (prefix + "/levels/" + mapOfLevels.at(onTheMap).name).c_str(), 1);
+			resetTerminal();
 			int ret = system(levelScript.c_str());
 			if (ret == 32) {
 				mapOfLevels.at(onTheMap).dead = true;
@@ -193,8 +195,7 @@ void printMap(position_e &currPos)
 {
 	int i, j;
 
-	cout << "\x1b[2J"; //Clear the screen
-	cout << "\x1b[;H"; // move cursor to top-left
+	resetTerminal();
 
 	for(i = 0; i < 50; i++) {
 		for(j = 0; j < 50; j++) {
@@ -214,4 +215,10 @@ void bufferOff()
 	tcgetattr(0, &t);
 	t.c_lflag &= ~ICANON;
 	tcsetattr(0, TCSANOW, &t);
+}
+
+void resetTerminal()
+{
+	cout << "\x1b[2J"; //Clear the screen
+	cout << "\x1b[;H"; // move cursor to top-left
 }
