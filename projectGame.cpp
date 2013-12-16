@@ -4,6 +4,9 @@
 #include <termios.h>
 #include<string>
 #include <fstream>
+#include <map>
+#include <dirent.h>
+#include <cstdlib>
 //#include <conio.h>
 //#include <stdio.h>
 
@@ -16,20 +19,40 @@ struct position_e
   int y_cor;
 };
 
+struct Wizzard
+{
+  string name;
+  bool dead;
+};
+
+string prefix;
+string levelScript;
+
+map<char, Wizzard> mapOfLevels;
+
 void loadMap(string fileName);
 void bufferOff();
 void updateMap(position_e currPos);
 void printMap();
-void moveLeft(position_e currPos);
-void moveRight(position_e currPos);
-void moveUp(position_e currPos);
-void moveDown(position_e currPos);
+void getLevels(map<char, Wizzard> mapOfLevels);
+void proceedInput(char userInput);
 
 
-int main()
+
+int main(int argc, char *argv[])
 {
-
-
+    
+ 
+   //Building the path prefix
+   // we stdup it twice because some implementations of dirname
+   // return a pointer to internal static memory, and others
+   // modify it inplace, so account for both variants like so:
+    char* firstCopy= strdup(argv[0]);
+    char* firstCopyDir= dirname(firstCopy);
+    prefix = string (firstCopyDir);
+    free(firstCopy);
+    levelScript = prefix + "/shell-wrapper/run.sh";
+  
     position_e currPos;
     currPos.x_cor= 49;
     currPos.y_cor= 49;
@@ -42,6 +65,9 @@ int main()
     updateMap(currPos);
     printMap();
 
+    //Loading the levels into the map structure
+    getlevels(mapOfLevels);
+
     gameOver= false;    
 
     char userInput;
@@ -53,20 +79,7 @@ int main()
     {
 
     cin >> userInput;
-    
-    switch(userInput)
-
-    {
-
-    case 'a': moveLeft(currPos);
-
-    case'd': moveRight(currPos);
-
-    case's': moveDown(currPos);
-
-    case'w': moveUp(currPos);
-
-    }
+    proceedInput(currPos);
     updateMap(currPos);
     printMap();
 
@@ -82,6 +95,77 @@ int main()
 
 
 /////////////////////////////////////////////
+void proceedInput(char userInput,  position_e currPos;)
+{
+  int requestedX= currPos.x_cor;
+  int requestedY currPos.y_cor;
+  requestedX= (userInput == 'a')?requestedX--:
+    (userInput == 'd')?requestedX++:requestedX;
+  requestedY= (userInput == 's')?requestedY--:
+    (userInput == 'w')?requestedY++:requestedY;
+
+  char  onTheMap= map[requestedX][requestedY];
+
+  if ( mapOfLevels.count(onTheMap)==0)
+    {
+      if(OnTheMap != 'X') 
+	{
+	  currPos.x_cor= requestedX;
+	  currPos.y_cor= requestedY;
+	}
+    {
+  else
+    {
+      if(!(mapOfLevels.at(onTheMap).dead))
+      {
+	// build the full path of the shell wrapper
+	setenv("GAME_LEVEL_DIR",(prefix+"/"+mapOfLevels.at(OnTheMap).name).c_str(), 1);
+	int ret = system(levelScript.c_str());
+	if (ret == 32) {
+	  mapOfLevels.at(onTheMap).dead= true;
+	  currPos.x_cor= requestedX;
+	  currPos.y_cor= requestedY;
+	} else if (ret == 33) {
+	  
+	} else {
+	  // some error
+	}
+      }
+    }
+  
+}
+
+void getLevels(map<char, Wizzard> mapOfLevels)
+{
+  DIR *dir;
+  DIR *subdir;
+  struct dirent *ent;
+  struct dirent *subent;
+  if ((dir = opendir(""))) != NULL)
+  {
+    while ((ent= readdir (dir)) != NULL)
+      {
+	Wizzard myWizzard;
+	char wizzarS; //Symbol
+
+	myWizzard.name= ent->d_name;
+	myWizzard.dead= false;
+ 
+	subdir = opendir("");
+	subent= readdir(subdir);
+
+	ifstream levelStream(subent->d_name.c_str());
+	levelStream >> wizzarS;
+
+	mapOfLevels.insert (pair <char, Wizzard> (wizzarS,myWizzard));
+      }
+
+  }
+
+
+
+
+}
 
 void loadMap(string fileName)
 {
@@ -101,7 +185,7 @@ void loadMap(string fileName)
 
 void updateMap(position_e currPos)
 {
-  map[currPos.x_cor][currPos.y_cor]= 1;
+  map[currPos.x_cor][currPos.y_cor]= '@';
 }
 
 void printMap()
@@ -123,24 +207,4 @@ void bufferOff()
   tcgetattr(0, &t);
   t.c_lflag &= ~ICANON;
   tcsetattr(0, TCSANOW, &t);
-}
-
-
-
-void moveLeft(position_e currPos)
-{
-  currPos.x_cor=(map[currPos.x_cor -1][currPos.y_cor]=='X')? currPos.x_cor: currPos.x_cor--;
-  
-}
-void moveRight(position_e currPos)
-{
-  currPos.x_cor=(map[currPos.x_cor +1][currPos.y_cor]=='X')? currPos.x_cor: currPos.x_cor++;
-}
-void moveUp(position_e currPos)
-{
-  currPos.y_cor=(map[currPos.x_cor][currPos.y_cor -1]=='X')? currPos.y_cor: currPos.y_cor--;
-}
-void moveDown(position_e currPos)
-{
- currPos.y_cor=(map[currPos.x_cor][currPos.y_cor +1]=='X')? currPos.y_cor: currPos.y_cor++;
 }
