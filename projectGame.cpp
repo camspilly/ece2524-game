@@ -32,7 +32,7 @@ string levelScript;
 
 map <char, Wizzard> mapOfLevels;
 
-void loadMap(string fileName);
+void loadMap(string fileName, position_e currPos);
 void bufferOff();
 void updateMap(position_e currPos);
 void printMap();
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     bufferOff();
 
     //Loading map from file
-    loadMap("main.map");
+    loadMap("main.map", currPos);
     updateMap(currPos);
     printMap();
 
@@ -169,23 +169,17 @@ void getLevels(map<char, Wizzard> mapOfLevels)
 
 void loadMap(string fileName, position_e currPos)
 {
-
   ifstream inputFile(fileName.c_str());
     int i,j;
-    for (i=0;i<50;i++)
-      {
-	for (j=0; j<50; j++)
-	  {
+    for (i=0;i<50;i++) {
+	for (j=0; j<50; j++) {
              inputFile >> gameMap[i][j];
-	     if (gameMap[i][j]=='@') 
-	     {
+	     if (gameMap[i][j]=='@') {
 	       currPos.x_cor= i;
 	       currPos.y_cor= j;
-	     {
-
-	  }
-
-      }
+	     }
+	}
+    }
 }
 
 void updateMap(position_e currPos)
@@ -201,7 +195,7 @@ int i,j;
     for(j=0;j<50;j++)
     {
      cout<<gameMap[i][j];
-     
+
     }
   }
 }
