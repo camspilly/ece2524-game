@@ -33,7 +33,7 @@ map <char, Wizzard> mapOfLevels;
 void loadMap(string fileName, position_e& currPos);
 void bufferOff();
 void printMap(position_e &currPos);
-void getLevels(map<char, Wizzard> mapOfLevels);
+void getLevels(map<char, Wizzard>& mapOfLevels);
 void proceedInput(char userInput, position_e& currPos);
 
 int main(int argc, char *argv[])
@@ -136,7 +136,7 @@ void proceedInput(char userInput,  position_e& currPos)
 
 }
 
-void getLevels(map<char, Wizzard> mapOfLevels)
+void getLevels(map<char, Wizzard>& mapOfLevels)
 {
 	DIR *dir;
 	struct dirent *ent;
