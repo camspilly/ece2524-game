@@ -32,12 +32,12 @@ string levelScript;
 
 map <char, Wizzard> mapOfLevels;
 
-void loadMap(string fileName, position_e currPos);
+void loadMap(string fileName, position_e& currPos);
 void bufferOff();
-void updateMap(position_e currPos);
+void updateMap(position_e& currPos);
 void printMap();
 void getLevels(map<char, Wizzard> mapOfLevels);
-void proceedInput(char userInput, position_e currPos);
+void proceedInput(char userInput, position_e& currPos);
 
 
 
@@ -56,8 +56,8 @@ int main(int argc, char *argv[])
     levelScript = prefix + "/shell-wrapper/run.sh";
 
     position_e currPos;
-    currPos.x_cor= 49;
-    currPos.y_cor= 49;
+
+
 
     //Desactivate stdin buffer
     bufferOff();
@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 
 
 /////////////////////////////////////////////
-void proceedInput(char userInput,  position_e currPos)
+void proceedInput(char userInput,  position_e& currPos)
 {
     int requestedX= currPos.x_cor;
     int requestedY= currPos.y_cor;
@@ -178,7 +178,7 @@ void getLevels(map<char, Wizzard> mapOfLevels)
     }
 }
 
-void loadMap(string fileName, position_e currPos)
+void loadMap(string fileName, position_e& currPos)
 {
     ifstream inputFile(fileName.c_str());
     int i,j;
@@ -193,7 +193,7 @@ void loadMap(string fileName, position_e currPos)
     }
 }
 
-void updateMap(position_e currPos)
+void updateMap(position_e& currPos)
 {
     gameMap[currPos.x_cor][currPos.y_cor]= '@';
 }
