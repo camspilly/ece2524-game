@@ -163,7 +163,11 @@ void getLevels(map<char, Wizzard> mapOfLevels)
         myWizzard.name= ent->d_name;
         myWizzard.dead= false;
 
-        ifstream levelStream((prefix+"/levels/"+ent->d_name).c_str());
+        ifstream levelStream((prefix+"/levels/"+ent->d_name+"/ICON").c_str());
+        if (!levelStream.is_open()) {
+            cerr << "unable to load " << (ent->d_name) << ": missing ICON file" << endl;
+            exit(1);
+        }
         wizzarS= levelStream.get();
 
         mapOfLevels.insert (pair <char, Wizzard> (wizzarS,myWizzard));
