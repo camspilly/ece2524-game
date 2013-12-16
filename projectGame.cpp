@@ -102,12 +102,22 @@ void proceedInput(char userInput,  position_e currPos)
 {
     int requestedX= currPos.x_cor;
     int requestedY= currPos.y_cor;
-    map[currPos.x_cor][currPos.y_cor]=' ';
-    requestedX= (userInput == 'a')?requestedX--:
-                (userInput == 'd')? requestedX++ :requestedX;
+    gameMap[currPos.x_cor][currPos.y_cor]=' ';
 
-    requestedY= (userInput == 's')?requestedY--:
-                (userInput == 'w')?requestedY++:requestedY;
+    switch (userInput) {
+    case 'w':
+        requestedY++;
+        break;
+    case 'a':
+        requestedX--;
+        break;
+    case 's':
+        requestedY--;
+        break;
+    case 'd':
+        requestedX++;
+        break;
+    }
 
     char  onTheMap= gameMap[requestedX][requestedY];
 
