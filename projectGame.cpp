@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     bufferOff();
   
     //Loading map from file
-    loadMap("map1");
+    loadMap("main.map");
     updateMap(currPos);
     printMap();
 
