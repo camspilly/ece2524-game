@@ -1,8 +1,7 @@
-CPP :=cpp
-CFLAGS := -Wall
+CXXFLAGS = -Wall -Wextra
+
 all: projectGame
-projectGame: projectGame.o
+
+.PHONY: clean
 clean:
 	rm -f *.o projectGame
-%.o : %.c
-	$(CPP) $(CFLAGS) -c -o $@ $^

@@ -1,2 +1,5 @@
 levels/**/scratch/
 levels/**/history
+*~
+*.o
+*.swp
