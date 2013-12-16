@@ -4,4 +4,4 @@ all: projectGame
 
 .PHONY: clean
 clean:
-	rm -f *.o projectGame
+	rm -rf *.o projectGame *.dSYM
