@@ -141,30 +141,28 @@ void proceedInput(char userInput,  position_e currPos)
 void getLevels(map<char, Wizzard> mapOfLevels)
 {
     DIR *dir;
-    DIR *subdir;
     struct dirent *ent;
-    struct dirent *subent;
-    if ((dir = opendir((prefix+"/levels").c_str())) != NULL)
-    {
-        while ((ent= readdir (dir)) != NULL)
-        {
-            Wizzard myWizzard;
-            char wizzarS; //Symbol
 
-            myWizzard.name= ent->d_name;
-            myWizzard.dead= false;
+    dir = opendir((prefix+"/levels").c_str());
 
-            subdir = opendir((prefix+"/levels/"+myWizzard.name).c_str());
-            subent= readdir(subdir);
-
-            ifstream levelStream(subent->d_name);
-            wizzarS= levelStream.get();
-
-            mapOfLevels.insert (pair <char, Wizzard> (wizzarS,myWizzard));
-        }
-
+    if (dir == NULL) {
+        cerr << "unable to load levels" << endl;
+        exit(1);
     }
 
+    while ((ent= readdir (dir)) != NULL)
+    {
+        Wizzard myWizzard;
+        char wizzarS; //Symbol
+
+        myWizzard.name= ent->d_name;
+        myWizzard.dead= false;
+
+        ifstream levelStream((prefix+"/levels/"+ent->d_name).c_str());
+        wizzarS= levelStream.get();
+
+        mapOfLevels.insert (pair <char, Wizzard> (wizzarS,myWizzard));
+    }
 }
 
 void loadMap(string fileName, position_e currPos)
