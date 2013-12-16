@@ -5,13 +5,15 @@
 #include<string>
 #include <fstream>
 #include <map>
-#include <dirent.h>
 #include <cstdlib>
+#include <dirent.h>
+#include <string.h>
+#include <libgen.h>
 //#include <conio.h>
 //#include <stdio.h>
 
 using namespace std;
-char map[50][50];
+char gameMap[50][50];
 bool gameOver;
 struct position_e
 {
@@ -28,14 +30,14 @@ struct Wizzard
 string prefix;
 string levelScript;
 
-map<char, Wizzard> mapOfLevels;
+map <char, Wizzard> mapOfLevels;
 
 void loadMap(string fileName);
 void bufferOff();
 void updateMap(position_e currPos);
 void printMap();
 void getLevels(map<char, Wizzard> mapOfLevels);
-void proceedInput(char userInput);
+void proceedInput(char userInput, position_e currPos);
 
 
 
@@ -66,7 +68,7 @@ int main(int argc, char *argv[])
     printMap();
 
     //Loading the levels into the map structure
-    getlevels(mapOfLevels);
+    getLevels(mapOfLevels);
 
     gameOver= false;    
 
@@ -79,7 +81,7 @@ int main(int argc, char *argv[])
     {
 
     cin >> userInput;
-    proceedInput(currPos);
+    proceedInput(userInput,currPos);
     updateMap(currPos);
     printMap();
 
@@ -95,31 +97,32 @@ int main(int argc, char *argv[])
 
 
 /////////////////////////////////////////////
-void proceedInput(char userInput,  position_e currPos;)
+void proceedInput(char userInput,  position_e currPos)
 {
   int requestedX= currPos.x_cor;
-  int requestedY currPos.y_cor;
+  int requestedY= currPos.y_cor;
   requestedX= (userInput == 'a')?requestedX--:
-    (userInput == 'd')?requestedX++:requestedX;
+    (userInput == 'd')? requestedX++ :requestedX;
+  
   requestedY= (userInput == 's')?requestedY--:
     (userInput == 'w')?requestedY++:requestedY;
 
-  char  onTheMap= map[requestedX][requestedY];
+  char  onTheMap= gameMap[requestedX][requestedY];
 
   if ( mapOfLevels.count(onTheMap)==0)
     {
-      if(OnTheMap != 'X') 
+      if(onTheMap != 'X') 
 	{
 	  currPos.x_cor= requestedX;
 	  currPos.y_cor= requestedY;
 	}
-    {
+    }
   else
     {
       if(!(mapOfLevels.at(onTheMap).dead))
       {
 	// build the full path of the shell wrapper
-	setenv("GAME_LEVEL_DIR",(prefix+"/"+mapOfLevels.at(OnTheMap).name).c_str(), 1);
+	setenv("GAME_LEVEL_DIR",(prefix+"/"+mapOfLevels.at(onTheMap).name).c_str(), 1);
 	int ret = system(levelScript.c_str());
 	if (ret == 32) {
 	  mapOfLevels.at(onTheMap).dead= true;
@@ -141,7 +144,7 @@ void getLevels(map<char, Wizzard> mapOfLevels)
   DIR *subdir;
   struct dirent *ent;
   struct dirent *subent;
-  if ((dir = opendir(""))) != NULL)
+  if ((dir = opendir("")) != NULL)
   {
     while ((ent= readdir (dir)) != NULL)
       {
@@ -154,7 +157,7 @@ void getLevels(map<char, Wizzard> mapOfLevels)
 	subdir = opendir("");
 	subent= readdir(subdir);
 
-	ifstream levelStream(subent->d_name.c_str());
+	ifstream levelStream(subent->d_name);
 	levelStream >> wizzarS;
 
 	mapOfLevels.insert (pair <char, Wizzard> (wizzarS,myWizzard));
@@ -176,7 +179,7 @@ void loadMap(string fileName)
       {
 	for (j=0; j<50; j++)
 	  {
-             inputFile >> map[i][j];
+             inputFile >> gameMap[i][j];
 	    
 	  }
 
@@ -185,7 +188,7 @@ void loadMap(string fileName)
 
 void updateMap(position_e currPos)
 {
-  map[currPos.x_cor][currPos.y_cor]= '@';
+  gameMap[currPos.x_cor][currPos.y_cor]= '@';
 }
 
 void printMap()
@@ -195,7 +198,7 @@ int i,j;
   {
     for(j=0;j<50;j++)
     {
-     cout<<map[i][j];
+     cout<<gameMap[i][j];
     }
   }
 }
