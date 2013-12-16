@@ -84,6 +84,7 @@ int main(int argc, char *argv[])
         proceedInput(userInput,currPos);
         updateMap(currPos);
 	cout<<"\x1b[2J"; //Clear the screen
+	cout<<"\x1b[;H"; // move cursor to top-left
 	printMap();
 
     }
