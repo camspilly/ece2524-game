@@ -17,14 +17,14 @@ char gameMap[50][50];
 bool gameOver;
 struct position_e
 {
-  int x_cor;
-  int y_cor;
+    int x_cor;
+    int y_cor;
 };
 
 struct Wizzard
 {
-  string name;
-  bool dead;
+    string name;
+    bool dead;
 };
 
 string prefix;
@@ -45,10 +45,10 @@ int main(int argc, char *argv[])
 {
 
 
-   //Building the path prefix
-   // we stdup it twice because some implementations of dirname
-   // return a pointer to internal static memory, and others
-   // modify it inplace, so account for both variants like so:
+    //Building the path prefix
+    // we stdup it twice because some implementations of dirname
+    // return a pointer to internal static memory, and others
+    // modify it inplace, so account for both variants like so:
     char* firstCopy= strdup(argv[0]);
     char* firstCopyDir= dirname(firstCopy);
     prefix = string (firstCopyDir);
@@ -80,13 +80,13 @@ int main(int argc, char *argv[])
 
     {
 
-    cin >> userInput;
-    proceedInput(userInput,currPos);
-    updateMap(currPos);
-    printMap();
+        cin >> userInput;
+        proceedInput(userInput,currPos);
+        updateMap(currPos);
+        printMap();
 
     }
-     return 0;
+    return 0;
 }
 
 
@@ -99,112 +99,112 @@ int main(int argc, char *argv[])
 /////////////////////////////////////////////
 void proceedInput(char userInput,  position_e currPos)
 {
-  int requestedX= currPos.x_cor;
-  int requestedY= currPos.y_cor;
-  requestedX= (userInput == 'a')?requestedX--:
-    (userInput == 'd')? requestedX++ :requestedX;
+    int requestedX= currPos.x_cor;
+    int requestedY= currPos.y_cor;
+    requestedX= (userInput == 'a')?requestedX--:
+                (userInput == 'd')? requestedX++ :requestedX;
 
-  requestedY= (userInput == 's')?requestedY--:
-    (userInput == 'w')?requestedY++:requestedY;
+    requestedY= (userInput == 's')?requestedY--:
+                (userInput == 'w')?requestedY++:requestedY;
 
-  char  onTheMap= gameMap[requestedX][requestedY];
+    char  onTheMap= gameMap[requestedX][requestedY];
 
-  if ( mapOfLevels.count(onTheMap)==0)
+    if ( mapOfLevels.count(onTheMap)==0)
     {
-      if(onTheMap != 'X')
-	{
-	  currPos.x_cor= requestedX;
-	  currPos.y_cor= requestedY;
-	}
+        if(onTheMap != 'X')
+        {
+            currPos.x_cor= requestedX;
+            currPos.y_cor= requestedY;
+        }
     }
-  else
+    else
     {
-      if(!(mapOfLevels.at(onTheMap).dead))
-      {
-	// build the full path of the shell wrapper
-	setenv("GAME_LEVEL_DIR",(prefix+"/"+mapOfLevels.at(onTheMap).name).c_str(), 1);
-	int ret = system(levelScript.c_str());
-	if (ret == 32) {
-	  mapOfLevels.at(onTheMap).dead= true;
-	  currPos.x_cor= requestedX;
-	  currPos.y_cor= requestedY;
-	} else if (ret == 33) {
+        if(!(mapOfLevels.at(onTheMap).dead))
+        {
+            // build the full path of the shell wrapper
+            setenv("GAME_LEVEL_DIR",(prefix+"/"+mapOfLevels.at(onTheMap).name).c_str(), 1);
+            int ret = system(levelScript.c_str());
+            if (ret == 32) {
+                mapOfLevels.at(onTheMap).dead= true;
+                currPos.x_cor= requestedX;
+                currPos.y_cor= requestedY;
+            } else if (ret == 33) {
 
-	} else {
-	  // some error
-	}
-      }
+            } else {
+                // some error
+            }
+        }
     }
 
 }
 
 void getLevels(map<char, Wizzard> mapOfLevels)
 {
-  DIR *dir;
-  DIR *subdir;
-  struct dirent *ent;
-  struct dirent *subent;
-  if ((dir = opendir((prefix+"/levels").c_str())) != NULL)
-  {
-    while ((ent= readdir (dir)) != NULL)
-      {
-	Wizzard myWizzard;
-	char wizzarS; //Symbol
+    DIR *dir;
+    DIR *subdir;
+    struct dirent *ent;
+    struct dirent *subent;
+    if ((dir = opendir((prefix+"/levels").c_str())) != NULL)
+    {
+        while ((ent= readdir (dir)) != NULL)
+        {
+            Wizzard myWizzard;
+            char wizzarS; //Symbol
 
-	myWizzard.name= ent->d_name;
-	myWizzard.dead= false;
+            myWizzard.name= ent->d_name;
+            myWizzard.dead= false;
 
-	subdir = opendir((prefix+"/levels/"+myWizzard.name).c_str());
-	subent= readdir(subdir);
+            subdir = opendir((prefix+"/levels/"+myWizzard.name).c_str());
+            subent= readdir(subdir);
 
-	ifstream levelStream(subent->d_name);
-	wizzarS= levelStream.get();
+            ifstream levelStream(subent->d_name);
+            wizzarS= levelStream.get();
 
-	mapOfLevels.insert (pair <char, Wizzard> (wizzarS,myWizzard));
-      }
+            mapOfLevels.insert (pair <char, Wizzard> (wizzarS,myWizzard));
+        }
 
-  }
+    }
 
 }
 
 void loadMap(string fileName, position_e currPos)
 {
-  ifstream inputFile(fileName.c_str());
+    ifstream inputFile(fileName.c_str());
     int i,j;
-    for (i=0;i<50;i++) {
-	for (j=0; j<50; j++) {
-             inputFile >> gameMap[i][j];
-	     if (gameMap[i][j]=='@') {
-	       currPos.x_cor= i;
-	       currPos.y_cor= j;
-	     }
-	}
+    for (i=0; i<50; i++) {
+        for (j=0; j<50; j++) {
+            inputFile >> gameMap[i][j];
+            if (gameMap[i][j]=='@') {
+                currPos.x_cor= i;
+                currPos.y_cor= j;
+            }
+        }
     }
 }
 
 void updateMap(position_e currPos)
 {
-  gameMap[currPos.x_cor][currPos.y_cor]= '@';
+    gameMap[currPos.x_cor][currPos.y_cor]= '@';
 }
 
 void printMap()
 {
-int i,j;
-  for(i=0;i<50;i++)
-  {
-    for(j=0;j<50;j++)
+    int i,j;
+    for(i=0; i<50; i++)
     {
-     cout<<gameMap[i][j];
+        for(j=0; j<50; j++)
+        {
+            cout<<gameMap[i][j];
 
+        }
     }
-  }
 }
 
 void bufferOff()
 {
-  //Desactivating standard input buffer
-  struct termios t;
-  tcgetattr(0, &t);
-  t.c_lflag &= ~ICANON;
-  tcsetattr(0, TCSANOW, &t);
+    //Desactivating standard input buffer
+    struct termios t;
+    tcgetattr(0, &t);
+    t.c_lflag &= ~ICANON;
+    tcsetattr(0, TCSANOW, &t);
 }
