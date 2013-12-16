@@ -83,7 +83,8 @@ int main(int argc, char *argv[])
         cin >> userInput;
         proceedInput(userInput,currPos);
         updateMap(currPos);
-        printMap();
+	cout<<"\x1b[2J"; //Clear the screen
+	printMap();
 
     }
     return 0;
@@ -101,6 +102,7 @@ void proceedInput(char userInput,  position_e currPos)
 {
     int requestedX= currPos.x_cor;
     int requestedY= currPos.y_cor;
+    map[currPos.x_cor][currPos.y_cor]=' ';
     requestedX= (userInput == 'a')?requestedX--:
                 (userInput == 'd')? requestedX++ :requestedX;
 
