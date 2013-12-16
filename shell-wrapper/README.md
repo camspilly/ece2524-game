@@ -19,7 +19,7 @@ anything else should be regarded as an internal error
 
 # Level Structure
 
-* `<level_name>` - The name of the level
+* `<level_name>/` - The name of the level
   * `clean/` - The virgin copy of the working directory the user gets dropped in for the level (duplicated to `scratch` for the user to actually work in)
   * `support/` - An optional directory containing whatever the challenge might need (for example support scripts that you don't want visible in the working directory, or a file of expected output to be used in validation)
   * `CHALLENGE` - A description of what you're asking the user to do
