@@ -1,2 +1,7 @@
 levels/**/scratch/
 levels/**/history
+*~
+*.o
+*.swp
+*.dSYM/
+projectGame

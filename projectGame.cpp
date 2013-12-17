@@ -1,144 +1,224 @@
-#include<iostream>
+#include <iostream>
 #include <ostream>
-#include<sstream>
+#include <sstream>
 #include <termios.h>
-#include<string>
+#include <string>
 #include <fstream>
+#include <map>
+#include <cstdlib>
+#include <dirent.h>
+#include <string.h>
+#include <libgen.h>
 //#include <conio.h>
 //#include <stdio.h>
 
 using namespace std;
-char map[50][50];
+char gameMap[50][50];
 bool gameOver;
-struct position_e
-{
-  int x_cor;
-  int y_cor;
+struct position_e {
+	int x_cor;
+	int y_cor;
 };
 
-void loadMap(string fileName);
+struct Wizzard {
+	string name;
+	bool dead;
+};
+
+string prefix;
+string levelScript;
+
+map <char, Wizzard> mapOfLevels;
+
+void loadMap(string fileName, position_e& currPos);
 void bufferOff();
-void updateMap(position_e currPos);
-void printMap();
-void moveLeft(position_e currPos);
-void moveRight(position_e currPos);
-void moveUp(position_e currPos);
-void moveDown(position_e currPos);
+void printMap(position_e &currPos);
+void getLevels(map<char, Wizzard>& mapOfLevels);
+void proceedInput(char userInput, position_e& currPos);
+void resetTerminal();
 
-
-int main()
+int main(int argc, char *argv[])
 {
 
 
-    position_e currPos;
-    currPos.x_cor= 49;
-    currPos.y_cor= 49;
+	//Building the path prefix
+	// we stdup it twice because some implementations of dirname
+	// return a pointer to internal static memory, and others
+	// modify it inplace, so account for both variants like so:
+	char* firstCopy = strdup(argv[0]);
+	char* firstCopyDir = dirname(firstCopy);
+	prefix = string (firstCopyDir);
+	free(firstCopy);
+	levelScript = prefix + "/shell-wrapper/run.sh";
 
-    //Desactivate stdin buffer
-    bufferOff();
-  
-    //Loading map from file
-    loadMap("map1");
-    updateMap(currPos);
-    printMap();
+	position_e currPos;
 
-    gameOver= false;    
 
-    char userInput;
 
-    //Main game loop
+	//Desactivate stdin buffer
+	bufferOff();
 
-    while (!gameOver)
+	//Loading map from file
+	loadMap("main.map", currPos);
+	printMap(currPos);
 
-    {
+	//Loading the levels into the map structure
+	getLevels(mapOfLevels);
 
-    cin >> userInput;
-    updateMap(currPos);
-    printMap();
-    switch(userInput)
+	gameOver = false;
 
-    {
+	char userInput;
 
-    case 'a': moveLeft(currPos);
+	//Main game loop
 
-    case'd': moveRight(currPos);
+	while (!gameOver)
 
-    case's': moveDown(currPos);
+	{
 
-    case'w': moveUp(currPos);
+		cin >> userInput;
+		proceedInput(userInput, currPos);
+		printMap(currPos);
 
-    }
-
-    }
-     return 0;
+	}
+	return 0;
 }
 
-    
-   
+
+
 
 
 
 
 
 /////////////////////////////////////////////
-
-void loadMap(string fileName)
+void proceedInput(char userInput,  position_e& currPos)
 {
+	int requestedX = currPos.x_cor;
+	int requestedY = currPos.y_cor;
 
-  ifstream inputFile(fileName.c_str());
-    int i,j;
-    for (i=0;i<5;i++)
-      {
-	for (j=0; j<50; j++)
-	  {
-             inputFile >> map[i][j];
-	    
-	  }
+	switch (userInput) {
+	case 'w':
+		requestedY--;
+		break;
+	case 'a':
+		requestedX--;
+		break;
+	case 's':
+		requestedY++;
+		break;
+	case 'd':
+		requestedX++;
+		break;
+	}
 
-      }   
+	char onTheMap = gameMap[requestedX][requestedY];
+
+	if ( mapOfLevels.count(onTheMap) == 0) {
+		if(onTheMap != 'X') {
+			currPos.x_cor = requestedX;
+			currPos.y_cor = requestedY;
+		}
+	} else {
+		if(!(mapOfLevels.at(onTheMap).dead)) {
+			// build the full path of the shell wrapper
+			setenv("GAME_LEVEL_DIR", (prefix + "/levels/" + mapOfLevels.at(onTheMap).name).c_str(), 1);
+			resetTerminal();
+			int ret = system(levelScript.c_str());
+			if (ret == 32) {
+				mapOfLevels.at(onTheMap).dead = true;
+				currPos.x_cor = requestedX;
+				currPos.y_cor = requestedY;
+			} else if (ret == 33) {
+
+			} else {
+				// some error
+			}
+		}
+	}
+
 }
 
-void updateMap(position_e currPos)
+void getLevels(map<char, Wizzard>& mapOfLevels)
 {
-  map[currPos.x_cor][currPos.y_cor]= 1;
+	DIR *dir;
+	struct dirent *ent;
+
+	dir = opendir((prefix + "/levels").c_str());
+
+	if (dir == NULL) {
+		cerr << "unable to load levels" << endl;
+		exit(1);
+	}
+
+	while ((ent = readdir (dir)) != NULL) {
+		if (strcmp(ent->d_name, ".") == 0 ||
+		    strcmp(ent->d_name, "..") == 0 ||
+		    ent->d_type != DT_DIR)
+			continue;
+
+		Wizzard myWizzard;
+		char wizzarS; //Symbol
+
+		myWizzard.name = ent->d_name;
+		myWizzard.dead = false;
+
+		ifstream levelStream((prefix + "/levels/" + ent->d_name + "/ICON").c_str());
+		if (!levelStream.is_open()) {
+			cerr << "unable to load " << (ent->d_name) << ": missing ICON file" << endl;
+			exit(1);
+		}
+		wizzarS = levelStream.get();
+
+		mapOfLevels.insert (pair <char, Wizzard> (wizzarS, myWizzard));
+	}
 }
 
-void printMap()
+void loadMap(string fileName, position_e& currPos)
 {
-int i,j;
-  for(i=0;i<50;i++)
-  {
-    for(j=0;j<50;j++)
-    {
-     cout<<map[i][j];
-    }
-  }
+	ifstream inputFile(fileName.c_str());
+	int i, j;
+	for (i = 0; i < 50; i++) {
+		for (j = 0; j < 50; j++) {
+			char cell;
+			inputFile >> cell;
+			if (cell == '@') {
+				currPos.x_cor = j;
+				currPos.y_cor = i;
+				gameMap[j][i] = '-';
+			} else
+				gameMap[j][i] = cell;
+		}
+	}
+}
+
+void printMap(position_e &currPos)
+{
+	int i, j;
+
+	resetTerminal();
+
+	for(i = 0; i < 50; i++) {
+		for(j = 0; j < 50; j++) {
+			if (i == currPos.y_cor && j == currPos.x_cor)
+				cout << "@";
+			else
+				cout << gameMap[j][i];
+		}
+		cout << endl;
+	}
 }
 
 void bufferOff()
-{  
-  //Desactivating standard input buffer
-  struct termios t;
-  tcgetattr(0, &t);
-  t.c_lflag &= ~ICANON;
-  tcsetattr(0, TCSANOW, &t);
+{
+	//Desactivating standard input buffer
+	struct termios t;
+	tcgetattr(0, &t);
+	t.c_lflag &= ~ICANON;
+	tcsetattr(0, TCSANOW, &t);
 }
 
-
-
-void moveLeft(position_e currPos)
+void resetTerminal()
 {
-  currPos.x_cor=(map[currPos.x_cor -1][currPos.y_cor]=='X')? currPos.x_cor: currPos.x_cor--;
-}
-void moveRight(position_e currPos)
-{
-  currPos.x_cor=(map[currPos.x_cor +1][currPos.y_cor]=='X')? currPos.x_cor: currPos.x_cor++;
-}
-void moveUp(position_e currPos)
-{
-  currPos.y_cor=(map[currPos.x_cor][currPos.y_cor -1]=='X')? currPos.y_cor: currPos.y_cor--;
-}
-void moveDown(position_e currPos)
-{
- currPos.y_cor=(map[currPos.x_cor][currPos.y_cor +1]=='X')? currPos.y_cor: currPos.y_cor++;
+	cout << "\x1b[2J"; //Clear the screen
+	cout << "\x1b[;H"; // move cursor to top-left
 }
