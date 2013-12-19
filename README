@@ -3,20 +3,8 @@ Game to help people learn *nix
 contributors: jpo, camspill, cdorick, yousbj
 url: https://github.com/jpouellet/ece2524-game
 
-This is a game designed to help you learn how to use the linux command line.
+This is a game designed to help you learn how to use the linux command line. The game takes you through several levels (of original content) in which you are eased into the linux command line. 
 
-First, build the game:
-  $ make
+    GAME_LEVEL_DIR=levels/santa ./shell-wrapper/run.sh
 
-Then, play the game!
-  $ ./projectGame
-
-WASD moves your character, the rest is a puzzle :)
-
-Good luck!
-
-Requirements:
- - Bash (known to work as far back as 3.2)
- - GNU coreutils (or equivalent)
- - Perl
- - probably other things (let me know when it breaks, and send me any errors you see)
+The point of this game is to give you a basic understanding of linux. In the game there are 10 levels which each consist of a set of characters (many that you most likely know). Each set of characters is experiencing a different problem and needs a solution, your solution. The game is very straightfoward and aligns with the Unix design philosophy in that it is very good at what it does. It's designed specifically to teach you enough that you don't feel completely lost around linux, all while at the same time entertaining you in the form of a game.
