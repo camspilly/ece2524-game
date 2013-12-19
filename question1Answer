@@ -1,1 +1,0 @@
-find . -name "*.[ch]" -exec grep -i -H "search pharse" {} \;
